@@ -1,36 +1,16 @@
 package main
 
-import (
-	"fmt"
-	"log"
-	"os"
-
-	"gorm.io/driver/postgres"
-	"gorm.io/gorm"
-)
-
 func main() {
-	dsn := "postgres://postgres:mysecretpassword@localhost:5432/subscriptions_db?sslmode=disable"
+	// err := godotenv.Load("../.env")
+	// if err != nil {
+	// 	log.Printf("Ошибка чтения env файлa: %v", err)
+	// }
 
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
-	if err != nil {
-		log.Fatalf("Ошибка подключения к базе данных: %v", err)
-	}
+	// conn_db := db.Conn()
+	// db.Migrations(conn_db) // psql -U postgres -d subscriptions_db
 
-	fmt.Println("подключился к базе данных")
-
-	sqlFile, err := os.ReadFile("../migrations/001_init.sql")
-	if err != nil {
-		log.Fatalf("Ошибка чтения SQL-файла: %v", err)
-	}
-
-	sqlScript := string(sqlFile)
-	result := db.Exec(sqlScript)
-
-	if result.Error != nil {
-		log.Fatalf("Ошибка выполнения SQL-скрипта: %v", result.Error)
-	}
-
-	fmt.Println("Таблица успешно создана")
-
+	// r := chi.NewRouter()
+	// r.Use(middleware.Logger)
+	// r.Get("/hi", web)
+	// http.ListenAndServe(":8080", r)
 }

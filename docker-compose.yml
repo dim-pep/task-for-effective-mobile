@@ -2,13 +2,13 @@ version: '3.8'
 
 services:
   db:
-    image: postgres:15-alpine  # Используем легковесный образ Postgres 15
-    container_name: my_project_db
+    image: postgres:15-alpine  
+    container_name: db
     restart: always
     environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=mysecretpassword
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_DB=subscriptions_db
     ports:
-      - "5432:5432"  # Пробрасываем порт из контейнера на ваш компьютер
+      - "${APP_PORT}:${APP_PORT}" 
 
