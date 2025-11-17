@@ -1,0 +1,208 @@
+basePath: /
+definitions:
+  config.FilterRequest:
+    properties:
+      end_date:
+        example: 2025-08
+        type: string
+      service_name:
+        example: Yandex Plus
+        type: string
+      start_date:
+        example: 2024-07
+        type: string
+      user_id:
+        example: 60601fee-2bf1-4721-ae6f-7636e79a0cba
+        type: string
+    type: object
+  config.Subscriptions:
+    properties:
+      price:
+        example: 400
+        type: integer
+      service_name:
+        example: Yandex Plus
+        type: string
+      start_date:
+        example: 2025-07
+        type: string
+      user_id:
+        example: 60601fee-2bf1-4721-ae6f-7636e79a0cba
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: REST-сервис для агрегации онлайн-подписок
+  title: Subscriptions API
+  version: "1.0"
+paths:
+  /subscriptions:
+    post:
+      consumes:
+      - application/json
+      description: Создаёт запись о подписке.
+      parameters:
+      - description: Данные подписки
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/config.Subscriptions'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: created
+          schema:
+            type: string
+        "400":
+          description: Неправильный JSON/валидация
+          schema:
+            type: string
+        "500":
+          description: Внутренняя ошибка сервера
+          schema:
+            type: string
+      summary: Создать подписку
+      tags:
+      - subscriptions
+  /subscriptions/{id}:
+    delete:
+      parameters:
+      - description: ID подписки
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: deleted
+          schema:
+            type: string
+        "500":
+          description: Внутренняя ошибка сервера
+          schema:
+            type: string
+      summary: Удалить подписку по ID
+      tags:
+      - subscriptions
+    get:
+      parameters:
+      - description: ID подписки
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/config.Subscriptions'
+        "400":
+          description: Объекта с таким id не существует
+          schema:
+            type: string
+        "500":
+          description: Внутренняя ошибка сервера
+          schema:
+            type: string
+      summary: Получить подписку по ID
+      tags:
+      - subscriptions
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: ID подписки
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Новые данные подписки
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/config.Subscriptions'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: updated
+          schema:
+            type: string
+        "204":
+          description: Объекта с таким id не существует
+          schema:
+            type: string
+        "400":
+          description: Неправильный JSON/валидация
+          schema:
+            type: string
+        "500":
+          description: Внутренняя ошибка сервера
+          schema:
+            type: string
+      summary: Обновить подписку по ID
+      tags:
+      - subscriptions
+  /subscriptions/list:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/config.Subscriptions'
+            type: array
+        "500":
+          description: Внутренняя ошибка сервера
+          schema:
+            type: string
+      summary: Список подписок
+      tags:
+      - subscriptions
+  /subscriptions/sum:
+    post:
+      consumes:
+      - application/json
+      description: Возвращает суммарную стоимость за период с фильтрацией по user_id
+        и service_name. Даты в формате YYYY-MM.
+      parameters:
+      - description: 'Фильтр: service_name, user_id, start_date (YYYY-MM), end_date
+          (YYYY-MM)'
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/config.FilterRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 'Пример: {\"total_cost\":1200}'
+          schema:
+            additionalProperties:
+              type: integer
+            type: object
+        "400":
+          description: Неправильный JSON/валидация
+          schema:
+            type: string
+        "500":
+          description: Внутренняя ошибка сервера
+          schema:
+            type: string
+      summary: Суммарная стоимость подписок за период
+      tags:
+      - subscriptions
+schemes:
+- http
+swagger: "2.0"

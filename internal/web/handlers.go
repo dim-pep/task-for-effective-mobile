@@ -13,7 +13,17 @@ import (
 	"gorm.io/gorm"
 )
 
-// 8080/subscriptions -body
+// postSub godoc
+// @Summary Создать подписку
+// @Description Создаёт запись о подписке.
+// @Tags subscriptions
+// @Accept json
+// @Produce json
+// @Param input body config.Subscriptions true "Данные подписки"
+// @Success 201 {string} string "created"
+// @Failure 400 {string} string "Неправильный JSON/валидация"
+// @Failure 500 {string} string "Внутренняя ошибка сервера"
+// @Router /subscriptions [post]
 func postSub(w http.ResponseWriter, r *http.Request) { //Create
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	dec := json.NewDecoder(r.Body)
@@ -50,7 +60,15 @@ func postSub(w http.ResponseWriter, r *http.Request) { //Create
 	w.WriteHeader(http.StatusCreated)
 }
 
-// 8080/subscriptions{id}
+// getSub godoc
+// @Summary Получить подписку по ID
+// @Tags subscriptions
+// @Produce json
+// @Param id path string true "ID подписки"
+// @Success 200 {object} config.Subscriptions
+// @Failure 400 {string} string "Объекта с таким id не существует"
+// @Failure 500 {string} string "Внутренняя ошибка сервера"
+// @Router /subscriptions/{id} [get]
 func getSub(w http.ResponseWriter, r *http.Request) { //Read
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	id := chi.URLParam(r, "id")
@@ -68,7 +86,18 @@ func getSub(w http.ResponseWriter, r *http.Request) { //Read
 	json.NewEncoder(w).Encode(resp)
 }
 
-// 8080/subscriptions{id}
+// putSub godoc
+// @Summary Обновить подписку по ID
+// @Tags subscriptions
+// @Accept json
+// @Produce json
+// @Param id path string true "ID подписки"
+// @Param input body config.Subscriptions true "Новые данные подписки"
+// @Success 200 {string} string "updated"
+// @Failure 204 {string} string "Объекта с таким id не существует"
+// @Failure 400 {string} string "Неправильный JSON/валидация"
+// @Failure 500 {string} string "Внутренняя ошибка сервера"
+// @Router /subscriptions/{id} [put]
 func putSub(w http.ResponseWriter, r *http.Request) { //Update
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	dec := json.NewDecoder(r.Body)
@@ -110,7 +139,14 @@ func putSub(w http.ResponseWriter, r *http.Request) { //Update
 	w.WriteHeader(http.StatusOK)
 }
 
-// 8080/subscriptions{id}
+// delSub godoc
+// @Summary Удалить подписку по ID
+// @Tags subscriptions
+// @Produce json
+// @Param id path string true "ID подписки"
+// @Success 200 {string} string "deleted"
+// @Failure 500 {string} string "Внутренняя ошибка сервера"
+// @Router /subscriptions/{id} [delete]
 func delSub(w http.ResponseWriter, r *http.Request) { //Delete
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	id := chi.URLParam(r, "id")
@@ -123,7 +159,13 @@ func delSub(w http.ResponseWriter, r *http.Request) { //Delete
 	w.WriteHeader(http.StatusOK)
 }
 
-// 8080/subscriptions/list
+// getListSub godoc
+// @Summary Список подписок
+// @Tags subscriptions
+// @Produce json
+// @Success 200 {array} config.Subscriptions
+// @Failure 500 {string} string "Внутренняя ошибка сервера"
+// @Router /subscriptions/list [get]
 func getListSub(w http.ResponseWriter, r *http.Request) { //List?????
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	resp, err := db.GetSubsId()
@@ -136,7 +178,17 @@ func getListSub(w http.ResponseWriter, r *http.Request) { //List?????
 	json.NewEncoder(w).Encode(resp)
 }
 
-// 8080/subscriptions/filtred -param
+// getSumFiltredListOfSub godoc
+// @Summary Суммарная стоимость подписок за период
+// @Description Возвращает суммарную стоимость за период с фильтрацией по user_id и service_name. Даты в формате YYYY-MM.
+// @Tags subscriptions
+// @Accept json
+// @Produce json
+// @Param input body config.FilterRequest true "Фильтр: service_name, user_id, start_date (YYYY-MM), end_date (YYYY-MM)"
+// @Success 200 {object} map[string]int "Пример: {\"total_cost\":1200}"
+// @Failure 400 {string} string "Неправильный JSON/валидация"
+// @Failure 500 {string} string "Внутренняя ошибка сервера"
+// @Router /subscriptions/sum [post]
 func getSumFiltredListOfSub(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 
@@ -175,5 +227,4 @@ func getSumFiltredListOfSub(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(map[string]int{
 		"total_cost": sum,
 	})
-	//json.NewEncoder(w).Encode(resp)
 }
