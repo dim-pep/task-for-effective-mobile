@@ -83,6 +83,7 @@ func getSub(w http.ResponseWriter, r *http.Request) { //Read
 	}
 	log.Println("Объект успешно получен")
 	w.WriteHeader(http.StatusOK)
+	resp.StartDate = resp.StartDate[0:7]
 	json.NewEncoder(w).Encode(resp)
 }
 

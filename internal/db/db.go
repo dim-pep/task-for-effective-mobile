@@ -2,6 +2,7 @@ package db
 
 import (
 	"errors"
+	"fmt"
 	"log"
 	"os"
 
@@ -15,9 +16,10 @@ var Gorm *gorm.DB
 func Conn() *gorm.DB {
 	pg_user := os.Getenv("POSTGRES_USER")
 	pg_pass := os.Getenv("POSTGRES_PASSWORD")
-	pg_port := os.Getenv("APP_PORT")
+	pg_port := os.Getenv("DB_PORT")
+	pg_host := os.Getenv("DB_HOST")
 
-	dsn := "postgres://" + pg_user + ":" + pg_pass + "@localhost:" + pg_port + "/subscriptions_db?sslmode=disable"
+	dsn := fmt.Sprintf("postgres://%s:%s@%s:%s/subscriptions_db?sslmode=disable", pg_user, pg_pass, pg_host, pg_port)
 
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	db.Exec("CREATE EXTENSION IF NOT EXISTS pgcrypto;")

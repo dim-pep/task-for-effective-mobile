@@ -27,7 +27,7 @@ func main() {
 	docs.SwaggerInfo.BasePath = "/"
 
 	conn_db := db.Conn()
-	db.Migrations(conn_db) // psql -U postgres -d subscriptions_db
+	db.Migrations(conn_db)
 
 	r := web.CreateRouter()
 	http.ListenAndServe(":8080", r)
